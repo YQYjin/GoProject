@@ -17,7 +17,6 @@ func main() {
 	r.GET("/topic/:topicId", func(c *gin.Context) {
 		topicId := c.Param("topicId")
 		data := QueryPageInfo(topicId)
-
 		c.JSON(200, data)
 	})
 	//启动服务
@@ -25,7 +24,6 @@ func main() {
 	if err != nil {
 		return
 	}
-
 }
 func mainInit(filePath string) error {
 	if err := Init(filePath); err != nil {

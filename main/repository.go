@@ -14,13 +14,13 @@ type Topic struct {
 	Id      int64  `json:"id"`
 	Title   string `json:"title"`
 	Content string `json:"content"`
-	Date    int64  `json:"date"`
+	Date    int64  `json:"create_time"`
 }
 type Post struct {
 	Id      int64  `json:"id"`
-	TopicId int64  `json:"topic_id"`
+	TopicId int64  `json:"parent_id"`
 	Content string `json:"content"`
-	Date    int64  `json:"date"`
+	Date    int64  `json:"create_time"`
 }
 
 type PostDao struct {
@@ -111,6 +111,7 @@ func initPostIndexMap(filePath string) error {
 	postTmpMap := make(map[int64][]*Post)
 	for scanner.Scan() {
 		text := scanner.Text()
+		//println("读取到的帖子信息为:", text)
 		var post Post
 		if err := json.Unmarshal([]byte(text), &post); err != nil {
 			return err
@@ -119,5 +120,6 @@ func initPostIndexMap(filePath string) error {
 		postTmpMap[post.TopicId] = append(postTmpMap[post.TopicId], &post)
 	}
 	postIndexMap = postTmpMap
+	//遍历输出postIndexMap
 	return nil
 }

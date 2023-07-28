@@ -56,18 +56,26 @@ func (f *QueryPageInfoFlow) checkParam() error {
 
 // 准备信息,查询话题信息和帖子信息
 func (f *QueryPageInfoFlow) parperInfo() error {
+	println("话题ID为:", f.topicId)
 	var waitgroup sync.WaitGroup
 	waitgroup.Add(2)
 	//查询话题信息
 	go func() {
 		defer waitgroup.Done()
 		topic := NewTopicDaoInstance().QueryTopicById(f.topicId)
+		println("话题信息为:", topic.Content)
 		f.topic = topic
 	}()
 	//查询帖子信息
 	go func() {
 		defer waitgroup.Done()
 		posts := NewPostDaoInstance().QueryPostByTopicId(f.topicId)
+
+		print("帖子信息为:")
+		for _, post := range posts {
+			print(post.Content, " ")
+		}
+		println()
 		f.posts = posts
 	}()
 	waitgroup.Wait()
