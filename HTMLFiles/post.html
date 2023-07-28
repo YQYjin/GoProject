@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发帖</title>
+    <!-- 引入Bootstrap样式 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        /* 自定义样式 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .form-group {
+            width: 300px; /* 调整输入框宽度 */
+            margin-bottom: 10px; /* 调整表单组之间的垂直间距 */
+        }
+
+        .login-button {
+            display: flex;
+            justify-content: center;
+        }
+
+        .register-button {
+            display: flex;
+            justify-content: center;
+        }
+
+        .button-group {
+            width: 300px; /* 调整按钮组的宽度 */
+            margin-top: 10px; /* 调整按钮组与上方元素的间距 */
+            text-align: center; /* 居中按钮组 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>发表帖子</h2>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="topicId" style="margin-right: 10px;">话题ID:</label>
+            <input type="text" class="form-control" id="topicId" required>
+        </div>
+        <div class="form-group">
+            <label for="postContent" style="margin-right: 35px;">内容:</label>
+            <textarea id="postContent" class="form-control" name="postContent" rows="5" cols="50" required></textarea>
+<!--            <input type="text" class="form-control" id="password" required>-->
+        </div>
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">发布</button>
+        </div>
+    </form>
+</div>
+
+<!-- 引入jQuery和Bootstrap的JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // 监听表单提交事件
+        $("#loginForm").submit(function (event) {
+            event.preventDefault(); // 阻止表单的默认提交行为
+
+            // 获取输入的用户名和密码
+            var topicId = $("#topicId").val();
+            var postContent = $("#postContent").val();
+            var time = new Date().getTime();
+            console.log(topicId + " " + postContent);
+
+            var postData = {
+                topicId: topicId,
+                content: postContent,
+                create_time: time
+            };
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/post",  // 替换为实际的后台处理URL
+                data: postData,
+                crossDomain: true,
+                success: function (response) {
+                    Response.AddHeader("Access-Control-Allow-Origin", "*");
+                    // 在这里可以处理后台返回的响应
+                    // 例如根据响应结果进行页面跳转或显示错误信息等
+                    console.log("Success" + response);
+                    if (response == 'success') {
+                        window.location.href = "blog.html";
+                    } else {
+                        alert("用户名或密码错误");
+                    }
+                },
+                error: function (error) {
+                    console.log("Error:" + error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

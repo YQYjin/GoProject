@@ -36,18 +36,3 @@ func QueryPageInfo(topicIDStr string) *PageData {
 		Data: pageInfo,
 	}
 }
-
-type postFlow struct {
-}
-
-// 整合帖子数据
-func packPostInfo(topicId int64, content string, create_time int64) error {
-	post := &Post{
-		TopicId: topicId,
-		Content: content,
-		Date:    create_time,
-	}
-	//添加帖子ID(服务层方法)并进行下一步操作
-	paperPostInfo(post)
-	return nil
-}

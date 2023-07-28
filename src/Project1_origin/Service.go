@@ -21,6 +21,7 @@ type QueryPageInfoFlow struct {
 
 func ServiceQueryPageInfo(topicID int64) (*PageInfo, error) {
 	return NewQueryPageInfoFlow(topicID).Do()
+
 }
 
 // 创建一个查询页面流并初始化话题ID
@@ -86,11 +87,5 @@ func (f *QueryPageInfoFlow) packPageInfo() error {
 		Topic: f.topic,
 		Posts: f.posts,
 	}
-	return nil
-}
-
-// 添加帖子部分
-func paperPostInfo(post *Post) error {
-	addPost(post)
 	return nil
 }
