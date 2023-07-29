@@ -1,4 +1,4 @@
-package main
+package project1_hw
 
 import (
 	"github.com/gin-gonic/gin"
@@ -19,7 +19,6 @@ func main() {
 	//该网址接收到get请求时的操作
 	r.GET("topic/:topicId", func(c *gin.Context) {
 		topicId := c.Param("topicId")
-		//data := project1_hw.QueryPageInfo(topicId)
 		data := QueryPageInfo(topicId)
 		c.JSON(200, data)
 	})
@@ -30,7 +29,7 @@ func main() {
 		create_time := c.PostForm("create_time")
 		//使用协程进行添加,防止阻塞
 		go func() {
-			err := packPostInfo(topicId, content, create_time)
+			err := PackPostInfo(topicId, content, create_time)
 			if err != nil {
 				return
 			}
