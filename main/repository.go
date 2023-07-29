@@ -32,6 +32,9 @@ var (
 	postOnce sync.Once
 )
 
+// 维护最大帖子ID,用于生成新帖子ID
+var maxPostId int64 = 0
+
 func NewPostDaoInstance() *PostDao {
 	postOnce.Do(func() {
 		postDao = &PostDao{}
@@ -66,6 +69,7 @@ func (*TopicDao) QueryTopicById(topicId int64) *Topic {
 var (
 	topicIndexMap map[int64]*Topic
 	postIndexMap  map[int64][]*Post
+	indexLock     sync.Mutex
 )
 
 // ------数据层方法
@@ -116,10 +120,32 @@ func initPostIndexMap(filePath string) error {
 		if err := json.Unmarshal([]byte(text), &post); err != nil {
 			return err
 		}
+		//更新最大帖子ID
+		maxPostId = max(maxPostId, post.Id)
 		//将帖子放入对应话题下的列表中
 		postTmpMap[post.TopicId] = append(postTmpMap[post.TopicId], &post)
 	}
 	postIndexMap = postTmpMap
 	//遍历输出postIndexMap
+	return nil
+}
+func max(a, b int64) int64 {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// 添加帖子
+func (p *PostDao) addPost(post *Post) error {
+	//更新最大帖子ID
+	maxPostId++
+	post.Id = maxPostId
+	//将帖子放入对应话题下的列表中,更新索引
+	//更新索引时加锁,防止多线程同时写入
+	indexLock.Lock()
+	postIndexMap[post.TopicId] = append(postIndexMap[post.TopicId], post)
+	indexLock.Unlock()
+	println("成功添加帖子:", "topicId:", post.TopicId, "content:", post.Content, "date:", post.Date)
 	return nil
 }

@@ -91,6 +91,9 @@ func (f *QueryPageInfoFlow) packPageInfo() error {
 
 // 添加帖子部分
 func paperPostInfo(post *Post) error {
-	addPost(post)
+	err := NewPostDaoInstance().addPost(post)
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -82,16 +82,12 @@
                 type: "POST",
                 url: "http://localhost:8080/post",  // 替换为实际的后台处理URL
                 data: postData,
-                crossDomain: true,
                 success: function (response) {
-                    Response.AddHeader("Access-Control-Allow-Origin", "*");
-                    // 在这里可以处理后台返回的响应
-                    // 例如根据响应结果进行页面跳转或显示错误信息等
                     console.log("Success" + response);
                     if (response == 'success') {
-                        window.location.href = "blog.html";
+                       alert("发帖成功")
                     } else {
-                        alert("用户名或密码错误");
+                        alert("发帖失败");
                     }
                 },
                 error: function (error) {

@@ -41,13 +41,29 @@ type postFlow struct {
 }
 
 // 整合帖子数据
-func packPostInfo(topicId int64, content string, create_time int64) error {
+func packPostInfo(topicId string, content string, create_time string) error {
+	//将传入的字符串id转换为int64
+	topicId_int, err := strconv.ParseInt(topicId, 10, 64)
+	if err != nil {
+		println(err.Error())
+		return err
+	}
+	//将时间字符串转为int64
+	create_time_int, err := strconv.ParseInt(create_time, 10, 64)
+	if err != nil {
+		println(err.Error())
+		return err
+	}
 	post := &Post{
-		TopicId: topicId,
+		TopicId: topicId_int,
 		Content: content,
-		Date:    create_time,
+		Date:    create_time_int,
 	}
 	//添加帖子ID(服务层方法)并进行下一步操作
-	paperPostInfo(post)
+	err = paperPostInfo(post)
+	if err != nil {
+		println(err.Error())
+		return err
+	}
 	return nil
 }
